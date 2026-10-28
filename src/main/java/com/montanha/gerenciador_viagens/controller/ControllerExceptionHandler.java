@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.montanha.gerenciador_viagens.responses.Response;
 import com.montanha.gerenciador_viagens.services.exceptions.ViagemServiceException;
+import com.montanha.gerenciador_viagens.services.exceptions.RegraNegocioException;
 
 @RestControllerAdvice
 public class ControllerExceptionHandler {
@@ -17,4 +18,14 @@ public class ControllerExceptionHandler {
         response.getErrors().add(e.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
+
+    @ExceptionHandler(RegraNegocioException.class)
+    public ResponseEntity<Response<Void>> tratarRegraNegocioException(RegraNegocioException e) {
+        Response<Void> response = new Response<>();
+        response.getErrors().add(e.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+
+
+    }
+
 }

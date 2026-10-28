@@ -9,6 +9,7 @@ import com.montanha.gerenciador_viagens.dtos.ViagemDto;
 import com.montanha.gerenciador_viagens.entities.Viagem;
 import com.montanha.gerenciador_viagens.repositories.ViagemRepository;
 import com.montanha.gerenciador_viagens.services.exceptions.ViagemServiceException;
+import com.montanha.gerenciador_viagens.services.exceptions.RegraNegocioException;
 
 @Service
 public class ViagemServices {
@@ -21,6 +22,7 @@ public class ViagemServices {
     }
 
     public Viagem salvar(ViagemDto viagemDto) {
+        validarDatas(viagemDto);
         Viagem viagem = new Viagem();
         viagem.setLocalDeDestino(viagemDto.getLocalDeDestino());
         viagem.setDataPartida(viagemDto.getDataPartida());
@@ -35,6 +37,7 @@ public class ViagemServices {
     }
 
     public Viagem atualizar(Long id, ViagemDto viagemDto) {
+    validarDatas(viagemDto);
     Viagem viagem = buscar(id);
 
     viagem.setLocalDeDestino(viagemDto.getLocalDeDestino());
@@ -50,5 +53,11 @@ public void remover(Long id) {
     viagemRepository.delete(viagem);
 }
 
+private void validarDatas(ViagemDto viagemDto) {
+    if (viagemDto.getDataRetorno() != null
+            && viagemDto.getDataRetorno().isBefore(viagemDto.getDataPartida())) {
+        throw new RegraNegocioException("Data de retorno não pode ser anterior à data de partida");
+    }
+}
 
 }
