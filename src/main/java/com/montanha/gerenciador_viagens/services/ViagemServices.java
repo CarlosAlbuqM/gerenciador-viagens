@@ -33,4 +33,22 @@ public class ViagemServices {
         return viagemRepository.findById(id)
                 .orElseThrow(() -> new ViagemServiceException("Não existe esta viagem cadastrada"));
     }
+
+    public Viagem atualizar(Long id, ViagemDto viagemDto) {
+    Viagem viagem = buscar(id);
+
+    viagem.setLocalDeDestino(viagemDto.getLocalDeDestino());
+    viagem.setDataPartida(viagemDto.getDataPartida());
+    viagem.setDataRetorno(viagemDto.getDataRetorno());
+    viagem.setAcompanhante(viagemDto.getAcompanhante());
+
+    return viagemRepository.save(viagem);
+}
+
+public void remover(Long id) {
+    Viagem viagem = buscar(id);
+    viagemRepository.delete(viagem);
+}
+
+
 }
