@@ -53,9 +53,10 @@ public class GerenciadorViagemController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Viagem>> listar() {
-        List<Viagem> viagens = viagemService.listar();
-        return ResponseEntity.status(HttpStatus.OK).body(viagens);
+    public ResponseEntity<Response<List<Viagem>>> listar() {
+        Response<List<Viagem>> response = new Response<>();
+        response.setData(viagemService.listar());
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping(path = "/{id}")
@@ -67,25 +68,25 @@ public class GerenciadorViagemController {
     }
 
     @PutMapping(path = "/{id}")
-public ResponseEntity<Response<Viagem>> atualizar(@PathVariable("id") Long id,
-        @Valid @RequestBody ViagemDto viagemDto,
-        BindingResult result) {
+    public ResponseEntity<Response<Viagem>> atualizar(@PathVariable("id") Long id,
+            @Valid @RequestBody ViagemDto viagemDto,
+            BindingResult result) {
 
-    Response<Viagem> response = new Response<>();
+        Response<Viagem> response = new Response<>();
 
-    if (result.hasErrors()) {
-        result.getAllErrors().forEach(error -> response.getErrors().add(error.getDefaultMessage()));
-        return ResponseEntity.badRequest().body(response);
+        if (result.hasErrors()) {
+            result.getAllErrors().forEach(error -> response.getErrors().add(error.getDefaultMessage()));
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        Viagem viagemAtualizada = viagemService.atualizar(id, viagemDto);
+        response.setData(viagemAtualizada);
+        return ResponseEntity.ok(response);
     }
 
-    Viagem viagemAtualizada = viagemService.atualizar(id, viagemDto);
-    response.setData(viagemAtualizada);
-    return ResponseEntity.ok(response);
-}
-
-@DeleteMapping(path = "/{id}")
-public ResponseEntity<Void> remover(@PathVariable("id") Long id) {
-    viagemService.remover(id);
-    return ResponseEntity.noContent().build();
-}
+    @DeleteMapping(path = "/{id}")
+    public ResponseEntity<Void> remover(@PathVariable("id") Long id) {
+        viagemService.remover(id);
+        return ResponseEntity.noContent().build();
+    }
 }
