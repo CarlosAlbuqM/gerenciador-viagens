@@ -131,4 +131,4 @@ Projeto baseado no artigo "Como construir e testar uma API em Java utilizando o 
 
 ## Autor
 
-Carlos Phelipe Mesquita de Albuquerque, estudante de Sistemas de Informação no CESMAC.
+Carlos Mesquita
